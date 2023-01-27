@@ -40,7 +40,6 @@ public class Main {
         int nearNeeded = 5;
         int distLimit = 600;
         LinkedList<Boolean> isOutlier = new LinkedList<>();
-
         for (int i = 0; i < points.size(); i++) {
             System.out.println(isOutlier.size());
             if (i < 19) {
