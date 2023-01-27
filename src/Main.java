@@ -7,8 +7,9 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        ArrayList<double[]> points = new ArrayList<>();
+    private final ArrayList<double[]> points = new ArrayList<>();
+
+    public Main() {
         StdDraw.enableDoubleBuffering();
         StdDraw.setCanvasSize(700, 700);
         StdDraw.setXscale(-6000, 6000);
@@ -35,7 +36,11 @@ public class Main {
             if (quality != 15) continue;
             points.add(new double[]{r, theta});
         }
+    }
 
+
+
+    public static void main(String[] args) {
         //filter
         int nearNeeded = 5;
         int distLimit = 600;
