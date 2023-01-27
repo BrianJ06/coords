@@ -38,9 +38,7 @@ public class Main {
         }
     }
 
-
-
-    public static void main(String[] args) {
+    public void run() {
         //filter
         int nearNeeded = 5;
         int distLimit = 600;
@@ -56,7 +54,7 @@ public class Main {
             double t1;
             double b = points.get(i)[0];
             double t2 = points.get(i)[1];
-            for (int j = i-19; j < i; j++) {
+            for (int j = i - 19; j < i; j++) {
                 a = points.get(j)[0];
                 t1 = points.get(j)[1];
                 double dist = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) - 2 * a * b * Math.cos(Math.abs(t1 - t2)));
@@ -67,9 +65,9 @@ public class Main {
             if (i > 19) {
                 boolean outlier = isOutlier.getFirst();
                 numNear = 0;
-                a = points.get(i-19)[0];
-                t1 = points.get(i-19)[1];
-                if (outlier == false) StdDraw.point(a*Math.cos(t1), a*Math.sin(t1));
+                a = points.get(i - 19)[0];
+                t1 = points.get(i - 19)[1];
+                if (outlier == false) StdDraw.point(a * Math.cos(t1), a * Math.sin(t1));
                 else {
                     for (int j = i - 18; j <= i; j++) {
                         b = points.get(j)[0];
@@ -77,7 +75,7 @@ public class Main {
                         double dist = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) - 2 * a * b * Math.cos(Math.abs(t1 - t2)));
                         if (dist < distLimit) numNear += 1;
                     }
-                    if (numNear >= nearNeeded) StdDraw.point(a*Math.cos(t1), a*Math.sin(t1));
+                    if (numNear >= nearNeeded) StdDraw.point(a * Math.cos(t1), a * Math.sin(t1));
                     //else points.remove(i-19);
                 }
                 isOutlier.removeFirst();
@@ -86,30 +84,30 @@ public class Main {
 
         // fill in spots between points
         /**
-        StdDraw.setPenRadius(0.01);
-        for(int j = 0; j<points.size()-1;j++) {
-            double r1 = points.get(j)[0];
-            double t1 = points.get(j)[1];
-            double r2 = points.get(j + 1)[0];
-            double t2 = points.get(j + 1)[1];
-            double x1 = r1 * Math.cos(t1);
-            double x2 = r2 * Math.cos(t2);
-            double y1 = r1 * Math.sin(t1);
-            double y2 = r2 * Math.sin(t2);
-            double m = (y2 - y1) / (x2 - x1);
-            double b = y1 - m * x1;
-            if (t1 < t2) {
-                for (double i = t1; i < t2; i += 0.1 * Math.PI / 180) {
-                    double r = b / (Math.sin(i) - m * Math.cos(i));
-                    StdDraw.point(r * Math.cos(i), r * Math.sin(i));
-                }
-            } else {
-                for (double i = t2; i < t1; i += 0.1 * Math.PI / 180) {
-                    double r = b / (Math.sin(i) - m * Math.cos(i));
-                    StdDraw.point(r * Math.cos(i), r * Math.sin(i));
-                }
-            }
-        }
+         StdDraw.setPenRadius(0.01);
+         for(int j = 0; j<points.size()-1;j++) {
+         double r1 = points.get(j)[0];
+         double t1 = points.get(j)[1];
+         double r2 = points.get(j + 1)[0];
+         double t2 = points.get(j + 1)[1];
+         double x1 = r1 * Math.cos(t1);
+         double x2 = r2 * Math.cos(t2);
+         double y1 = r1 * Math.sin(t1);
+         double y2 = r2 * Math.sin(t2);
+         double m = (y2 - y1) / (x2 - x1);
+         double b = y1 - m * x1;
+         if (t1 < t2) {
+         for (double i = t1; i < t2; i += 0.1 * Math.PI / 180) {
+         double r = b / (Math.sin(i) - m * Math.cos(i));
+         StdDraw.point(r * Math.cos(i), r * Math.sin(i));
+         }
+         } else {
+         for (double i = t2; i < t1; i += 0.1 * Math.PI / 180) {
+         double r = b / (Math.sin(i) - m * Math.cos(i));
+         StdDraw.point(r * Math.cos(i), r * Math.sin(i));
+         }
+         }
+         }
          **/
         //StdDraw.point(0,0);
         StdDraw.setPenRadius(0.0005);
@@ -119,5 +117,10 @@ public class Main {
         }
         StdDraw.show();
         System.out.println("finished");
+    }
+
+
+    public static void main(String[] args) {
+
     }
 }
