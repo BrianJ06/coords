@@ -3,7 +3,6 @@ import StdLib.StdDraw;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Test {
@@ -36,8 +35,9 @@ public class Test {
             points.add(new double[]{r, theta});
         }
         for (double[] point : points) {
-            r = point[0];
-            theta = point[1];
+            double r = point[0];
+            double theta = point[1];
+            StdDraw.point(r*Math.cos(theta), r*Math.sin(theta));
         }
     }
 }

@@ -40,48 +40,34 @@ public class Main {
 
     public void run() {
         //filter
-        int nearNeeded = 5;
-        int distLimit = 600;
-        LinkedList<Boolean> isOutlier = new LinkedList<>();
+        int nearNeeded = 15;
+        int distLimit = 200;
+        int[] neighbors = new int[points.size()];
         for (int i = 0; i < points.size(); i++) {
-            System.out.println(isOutlier.size());
-            if (i < 19) {
-                isOutlier.addLast(true);
-                continue;
-            }
-            int numNear = 0;
+            neighbors[i] = 0;
+        }
+        for (int i = 0; i < points.size(); i++) {
             double a;
             double t1;
             double b = points.get(i)[0];
             double t2 = points.get(i)[1];
-            for (int j = i - 19; j < i; j++) {
+            for (int j = i; j < points.size(); j++) {
                 a = points.get(j)[0];
                 t1 = points.get(j)[1];
                 double dist = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) - 2 * a * b * Math.cos(Math.abs(t1 - t2)));
-                if (dist < distLimit) numNear += 1;
-            }
-            if (numNear >= nearNeeded) isOutlier.addLast(false);
-            else isOutlier.addLast(true);
-            if (i > 19) {
-                boolean outlier = isOutlier.getFirst();
-                numNear = 0;
-                a = points.get(i - 19)[0];
-                t1 = points.get(i - 19)[1];
-                if (outlier == false) StdDraw.point(a * Math.cos(t1), a * Math.sin(t1));
-                else {
-                    for (int j = i - 18; j <= i; j++) {
-                        b = points.get(j)[0];
-                        t2 = points.get(j)[1];
-                        double dist = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) - 2 * a * b * Math.cos(Math.abs(t1 - t2)));
-                        if (dist < distLimit) numNear += 1;
-                    }
-                    if (numNear >= nearNeeded) StdDraw.point(a * Math.cos(t1), a * Math.sin(t1));
-                    //else points.remove(i-19);
+                if (dist < distLimit) {
+                    neighbors[i] += 1;
+                    neighbors[j] += 1;
                 }
-                isOutlier.removeFirst();
             }
         }
-
+        for (int i = 0; i < neighbors.length; i++) {
+            if (neighbors[i] > nearNeeded) {
+                double r = points.get(i)[0];
+                double t = points.get(i)[1];
+                StdDraw.point(r*Math.cos(t), r*Math.sin(t));
+            }
+        }
         // fill in spots between points
         /**
          StdDraw.setPenRadius(0.01);
@@ -111,7 +97,7 @@ public class Main {
          **/
         //StdDraw.point(0,0);
         StdDraw.setPenRadius(0.0005);
-        for (int i = -6000; i <= 6000; i += 600) {
+        for (int i = -6000; i <= 6000; i += 200) {
             StdDraw.line(i, -6000, i, 6000);
             StdDraw.line(-6000, i, 6000, i);
         }
@@ -121,6 +107,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-
+        Main m = new Main();
+        m.run();
     }
 }
