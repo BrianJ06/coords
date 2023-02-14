@@ -1,11 +1,11 @@
 import StdLib.StdDraw;
 import StdLib.StdStats;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -108,6 +108,19 @@ public class Main {
         System.out.println("finished");
     }
 
+    public static void drawGrid() {
+        StdDraw.setPenRadius(0.0005);
+        StdDraw.setPenColor(new Color(0,0,0,50));
+        for (int i = -6000; i <= 6000; i += 200) {
+            StdDraw.line(i, -6000, i, 6000);
+            StdDraw.line(-6000, i, 6000, i);
+        }
+        StdDraw.setPenColor(StdDraw.BLACK);
+        //StdDraw.circle(0,0,4699);
+        StdDraw.line(0,0,10000*Math.cos(Math.toRadians(124.55)), 10000*Math.sin(Math.toRadians(124.55)));
+        StdDraw.show();
+    }
+
     public static void displayFile(String filename) {
         StdDraw.enableDoubleBuffering();
         StdDraw.setCanvasSize(700, 700);
@@ -132,24 +145,34 @@ public class Main {
             theta = Math.toRadians(theta);
 
             points.add(new double[]{r, theta});
-            StdDraw.point((r*Math.cos(theta)), r*Math.sin(theta));
+            if (Integer.parseInt(arr[3]) != 1) {
+                StdDraw.point((r * Math.cos(theta)), r * Math.sin(theta));
+            }
         }
 
         StdDraw.show();
 
+        drawGrid();
+
 
         //run some stats
-        List<Double> angles = points.stream().map(i -> i[0]).collect(Collectors.toList());
+        List<Double> angles = points.stream().map(i -> i[1]).collect(Collectors.toList());
         double[] a = new double[angles.size()];
-        IntStream.range(0,a.length).forEach(i->a[i] = angles.get(i));
+        IntStream.range(0,a.length).forEach(i->a[i] = Math.toDegrees(angles.get(i)));
 
-        List<Double> distances = points.stream().map(i -> i[1]).collect(Collectors.toList());
+        List<Double> distances = points.stream().map(i -> i[0]).collect(Collectors.toList());
         double[] d = new double[distances.size()];
         IntStream.range(0,d.length).forEach(i->d[i] = distances.get(i));
-        System.out.println("average angle " + StdStats.mean(a));
+        System.out.println("average angle (deg) " + StdStats.mean(a));
         System.out.println("angle stddev " + StdStats.stddev(a));
         System.out.println("average distance " + StdStats.mean(d));
         System.out.println("distance stddev " + StdStats.stddev(d));
+
+        Arrays.sort(d);
+        System.out.println("median distance " + d[d.length/2]);
+
+        Arrays.sort(a);
+        System.out.println("median angle " + a[a.length/2]);
     }
 
     public static void main(String[] args) {
