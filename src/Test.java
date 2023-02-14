@@ -12,7 +12,7 @@ public class Test {
         StdDraw.setCanvasSize(700, 700);
         StdDraw.setXscale(-6000, 6000);
         StdDraw.setYscale(-6000, 6000);
-        File file = new File("/Users/bjiang2/Documents/My_Java_Programs/coords/src/coords.txt");
+        File file = new File("src/coords.txt");
         Scanner scanner;
         try {
             scanner = new Scanner(file);
