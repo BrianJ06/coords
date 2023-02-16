@@ -154,19 +154,26 @@ public class Main {
         //drawGrid();
     }
 
+    //t2 should always be the angle ahead of t1
+    private static double angleDistance(double t1, double t2) {
+        if (t2 < t1) { //this happens when t2 is like 10, but t2 is about 350
+            return (t2 + 360) - t1;
+        }
+        return (t2 - t1);
+    }
+
     private static void printPoints() {
         StdDraw.disableDoubleBuffering();
         double prevAngle = points.get(0)[0];
         int e = 0;
         for (double[] i : points) {
-            if (i[1] > 150 && i[1] < 6000 && (i[1] < 3900 || i[1] > 4100) && (i[0] < 123 || i[0] > 126) && i[2] > 14 && i[2] == 15) {
-                if (Math.abs(prevAngle - i[0]) < 1 + e || Math.abs(prevAngle - i[0]) - 360 < 1 + e) {
+            if (i[1] > 150 && i[1] < 6000 && (i[1] < 3900 || i[1] > 4100) && (i[0] < 123 || i[0] > 126) && i[2] > 14 && i[2] == 15 && i[0] < 360) {
+                //angle filter
+                if (angleDistance(prevAngle, i[0]) < 100 + e) {
                     StdDraw.point((i[1] * Math.cos(Math.toRadians(i[0]))), i[1] * Math.sin(Math.toRadians(i[0])));
-                    prevAngle = i[0];
                     e = 0;
-                } else {
-                    e += 1;
-                }
+                } else e+= 100;
+
                 System.out.println(Arrays.toString(i));
 
                 try {
@@ -208,7 +215,7 @@ public class Main {
 
     public static void main(String[] args) {
         //Main m = new Main();
-        displayFile("src/data100spd.txt");
+        displayFile("src/data255spd.txt");
         //startBitData();
         System.out.println("done");
     }
