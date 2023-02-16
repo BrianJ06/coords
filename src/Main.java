@@ -166,23 +166,31 @@ public class Main {
         StdDraw.disableDoubleBuffering();
         double prevAngle = points.get(0)[0];
         int e = 0;
+        int iterationNo = 1;
+        int noAccepted = 0;
         for (double[] i : points) {
             if (i[1] > 150 && i[1] < 6000 && (i[1] < 3900 || i[1] > 4100) && (i[0] < 123 || i[0] > 126) && i[2] > 14 && i[2] == 15 && i[0] < 360) {
-                //angle filter
-                if (angleDistance(prevAngle, i[0]) < 100 + e) {
+                //angle filter needs improvment, map out transient angles
+                if (angleDistance(prevAngle, i[0]) < 40 + e) {
                     StdDraw.point((i[1] * Math.cos(Math.toRadians(i[0]))), i[1] * Math.sin(Math.toRadians(i[0])));
+                    System.out.println(iterationNo + " " + Arrays.toString(i));
                     e = 0;
-                } else e+= 100;
-
-                System.out.println(Arrays.toString(i));
-
+                    noAccepted++;
+                } else {
+                    e+= 40; //if we fail secondary filter
+                }
                 try {
                     Thread.sleep(0);
                 } catch (InterruptedException d) {
                     d.printStackTrace();
                 }
+            } else {
+                e += 40; //if we fail main filter
             }
+            iterationNo++;
+
         }
+        System.out.println(noAccepted + " points accepted");
 
         //StdDraw.show();
     }
