@@ -1,4 +1,5 @@
 import StdLib.StdDraw;
+import StdLib.StdOut;
 import StdLib.StdStats;
 
 import java.awt.*;
@@ -110,14 +111,14 @@ public class Main {
 
     public static void drawGrid() {
         StdDraw.setPenRadius(0.0005);
-        StdDraw.setPenColor(new Color(0,0,0,50));
+        StdDraw.setPenColor(new Color(0, 0, 0, 50));
         for (int i = -6000; i <= 6000; i += 200) {
             StdDraw.line(i, -6000, i, 6000);
             StdDraw.line(-6000, i, 6000, i);
         }
         StdDraw.setPenColor(StdDraw.BLACK);
         //StdDraw.circle(0,0,4699);
-        StdDraw.line(0,0,10000*Math.cos(Math.toRadians(124.55)), 10000*Math.sin(Math.toRadians(124.55)));
+        //StdDraw.line(0,0,10000*Math.cos(Math.toRadians(124.55)), 10000*Math.sin(Math.toRadians(124.55)));
         StdDraw.show();
     }
 
@@ -136,48 +137,79 @@ public class Main {
             throw new RuntimeException(e);
         }
         // add points to arraylist
+        StdDraw.setPenRadius(0.005);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             String[] arr = line.split(" ");
             double r = Double.parseDouble(arr[1]);
 
             double theta = Double.parseDouble(arr[0]);
-            theta = Math.toRadians(theta);
 
-            points.add(new double[]{r, theta});
-            if (Integer.parseInt(arr[3]) != 1) {
-                StdDraw.point((r * Math.cos(theta)), r * Math.sin(theta));
-            }
+            points.add(new double[]{theta, r, Integer.parseInt(arr[2]), Integer.parseInt(arr[3])});
+
         }
 
         StdDraw.show();
+        printPoints();
+        //drawGrid();
+    }
 
-        drawGrid();
+    private static void printPoints() {
+        StdDraw.disableDoubleBuffering();
+        double prevAngle = points.get(0)[0];
+        int e = 0;
+        for (double[] i : points) {
+            if (i[1] > 150 && i[1] < 6000 && (i[1] < 3900 || i[1] > 4100) && (i[0] < 123 || i[0] > 126) && i[2] > 14 && i[2] == 15) {
+                if (Math.abs(prevAngle - i[0]) < 1 + e || Math.abs(prevAngle - i[0]) - 360 < 1 + e) {
+                    StdDraw.point((i[1] * Math.cos(Math.toRadians(i[0]))), i[1] * Math.sin(Math.toRadians(i[0])));
+                    prevAngle = i[0];
+                    e = 0;
+                } else {
+                    e += 1;
+                }
+                System.out.println(Arrays.toString(i));
 
+                try {
+                    Thread.sleep(0);
+                } catch (InterruptedException d) {
+                    d.printStackTrace();
+                }
+            }
+        }
 
+        //StdDraw.show();
+    }
+
+    private static void stats() {
         //run some stats
-        List<Double> angles = points.stream().map(i -> i[1]).collect(Collectors.toList());
+        List<Double> angles = points.stream().map(i -> i[0]).collect(Collectors.toList());
         double[] a = new double[angles.size()];
-        IntStream.range(0,a.length).forEach(i->a[i] = Math.toDegrees(angles.get(i)));
+        IntStream.range(0, a.length).forEach(i -> a[i] = angles.get(i));
 
-        List<Double> distances = points.stream().map(i -> i[0]).collect(Collectors.toList());
+        List<Double> distances = points.stream().map(i -> i[1]).collect(Collectors.toList());
         double[] d = new double[distances.size()];
-        IntStream.range(0,d.length).forEach(i->d[i] = distances.get(i));
+        IntStream.range(0, d.length).forEach(i -> d[i] = distances.get(i));
+
         System.out.println("average angle (deg) " + StdStats.mean(a));
         System.out.println("angle stddev " + StdStats.stddev(a));
         System.out.println("average distance " + StdStats.mean(d));
         System.out.println("distance stddev " + StdStats.stddev(d));
 
         Arrays.sort(d);
-        System.out.println("median distance " + d[d.length/2]);
+        System.out.println("median distance " + d[d.length / 2]);
 
         Arrays.sort(a);
-        System.out.println("median angle " + a[a.length/2]);
+        System.out.println("median angle " + a[a.length / 2]);
+    }
+
+    private static void startBitData() {
+        points.stream().filter(i -> i[3] == 1).collect(Collectors.toList()).forEach(i -> System.out.println(Arrays.toString(i)));
     }
 
     public static void main(String[] args) {
         //Main m = new Main();
-        displayFile("src/EliaRoomFirstRow.txt");
+        displayFile("src/data100spd.txt");
+        //startBitData();
         System.out.println("done");
     }
 }
