@@ -163,6 +163,8 @@ public class Main {
     }
 
     private static void printPoints() {
+        var s = 20;
+
         StdDraw.disableDoubleBuffering();
         double prevAngle = points.get(0)[0];
         int e = 0;
@@ -171,13 +173,13 @@ public class Main {
         for (double[] i : points) {
             if (i[1] > 150 && i[1] < 6000 && (i[1] < 3900 || i[1] > 4100) && (i[0] < 123 || i[0] > 126) && i[2] > 14 && i[2] == 15 && i[0] < 360) {
                 //angle filter needs improvment, map out transient angles
-                if (angleDistance(prevAngle, i[0]) < 40 + e) {
+                if (angleDistance(prevAngle, i[0]) < s + e) {
                     StdDraw.point((i[1] * Math.cos(Math.toRadians(i[0]))), i[1] * Math.sin(Math.toRadians(i[0])));
                     System.out.println(iterationNo + " " + Arrays.toString(i));
                     e = 0;
                     noAccepted++;
                 } else {
-                    e+= 40; //if we fail secondary filter
+                    e+= s; //if we fail secondary filter
                 }
                 try {
                     Thread.sleep(0);
@@ -185,7 +187,7 @@ public class Main {
                     d.printStackTrace();
                 }
             } else {
-                e += 40; //if we fail main filter
+                e += s; //if we fail main filter
             }
             iterationNo++;
 
@@ -221,10 +223,41 @@ public class Main {
         points.stream().filter(i -> i[3] == 1).collect(Collectors.toList()).forEach(i -> System.out.println(Arrays.toString(i)));
     }
 
+    private static void thetaRPrint() {
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setCanvasSize(700, 700);
+        StdDraw.setXscale(-6000, 6000);
+        StdDraw.setYscale(-6000, 6000);
+
+        points = new ArrayList<>();
+        File file = new File("src/memoryDump.txt");
+        Scanner scanner;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        // add points to arraylist
+        StdDraw.setPenRadius(0.0005);
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] arr = line.split(" ");
+            double r = Double.parseDouble(arr[1]);
+
+            double theta = Double.parseDouble(arr[0]);
+
+            StdDraw.point((r * Math.cos(Math.toRadians(theta))), r * Math.sin(Math.toRadians(theta)));
+
+        }
+        StdDraw.show();
+    }
+
     public static void main(String[] args) {
         //Main m = new Main();
-        displayFile("src/data255spd.txt");
+        //displayFile("src/data255spd.txt");
         //startBitData();
+        Main.thetaRPrint();
+
         System.out.println("done");
     }
 }
